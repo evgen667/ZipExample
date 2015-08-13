@@ -55,35 +55,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public File copyFromAssets(String assets_name, String path) throws IOException {
-        InputStream is = getAssets().open(assets_name);
-        File db_path = getDatabasePath(path);
-        if (!db_path.exists())
-            db_path.getParentFile().mkdirs();
-        OutputStream os = new FileOutputStream(db_path);
-        ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
-        ZipEntry ze;
-        while ((ze = zis.getNextEntry()) != null) {
-            byte[] buffer = new byte[1024];
-            int count;
-            while ((count = zis.read(buffer)) > -1) {
-                os.write(buffer, 0, count);
-            }
-            os.close();
-            zis.closeEntry();
-        }
-        zis.close();
-        is.close();
-        return db_path;
-
-    }
-
     public void onUnzipZip(View v) throws IOException {
         SimpleDateFormat sdf = new SimpleDateFormat(" HH:mm:ss.SSS");
         String currentDateandTime = sdf.format(new Date());
         String log = mTVLog.getText().toString() + "\nStart unzip zip" + currentDateandTime;
         mTVLog.setText(log);
-        copyFromAssets("test_data.zip", "zip.db");
         InputStream is = getAssets().open("test_data.zip");
         File db_path = getDatabasePath("zip.db");
         if (!db_path.exists())
